@@ -1,10 +1,8 @@
 language: node_js
 node_js:
   - "12"
-services:
-  - mongodb
 before_script:
-  - cd task\2.2/Chai/
+  - cd task \2.2/Chai/
   - npm install
 script:
   - npm test
