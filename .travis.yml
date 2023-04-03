@@ -4,6 +4,6 @@ node_js:
 services:
   - mongodb
 script:
-  - cd task\2.2/Chai/
+  - cd task \2.2/Chai/
   - npm install
   - npm test
