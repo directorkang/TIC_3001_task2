@@ -6,5 +6,6 @@ services:
 before_script:
   - cd "task 2.2/Chai"
   - npm install
+  - npm install express
 script:
   - npm test
