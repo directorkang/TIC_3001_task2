@@ -1,0 +1,20 @@
+{
+  "name": "chai",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
+  },
+  "dependencies": {
+    "chai": "^4.3.7",
+    "save-dev": "^0.0.1-security"
+  }
+}
