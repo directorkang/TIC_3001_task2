@@ -3,7 +3,10 @@ node_js:
   - "12"
 services:
   - mongodb
-script:
-  - cd task \2.2/Chai/
+before_script:
+  - cd chai
   - npm install
+script:
+  - cd test/
   - npm test
+
