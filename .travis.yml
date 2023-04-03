@@ -6,4 +6,7 @@ services:
 install:
   - npm install
 script:
-  - npm run test
+  - cd task 2.2\Chai\
+  - npm install
+  - cd test/
+  - npm test
