@@ -6,4 +6,7 @@ services:
 before_script:
   - npm install
 script:
+  - cd ..\task 2.2\Chai\
+  - npm install
+  - cd test/
   - npm test
