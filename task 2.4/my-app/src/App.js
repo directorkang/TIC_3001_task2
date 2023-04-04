@@ -1,21 +1,20 @@
-// App.js
-
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import ContactList from './ContactList';
+import React, { useState } from 'react';
 import ContactForm from './ContactForm';
-import ContactDetail from './ContactDetail';
+import ContactList from './ContactList';
 
 function App() {
-  return (
-    <Router>
-      <Switch>
-        <Route path="/" exact component={ContactList} />
-        <Route path="/add" exact component={ContactForm} />
-        <Route path="/edit/:id" exact component={ContactForm} />
-        <Route path="/:id" exact component={ContactDetail} />
-      </Switch>
-    </Router>
-  );
+    const [contacts, setContacts] = useState([]);
+
+    const addContact = (contact) => {
+        setContacts([...contacts, contact]);
+    };
+
+    return (
+        <div className="App">
+            <ContactForm addContact={addContact} />
+            <ContactList contacts={contacts} />
+        </div>
+    );
 }
 
 export default App;
