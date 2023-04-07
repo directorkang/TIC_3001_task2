@@ -1,20 +1,57 @@
-// contactModel.js
+//contactModel.js
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
-//update schema
-const contactSchema = mongoose.Schema({
-    name: {
+const userSchema = new mongoose.Schema({
+    username: {
         type: String,
-        required: true
+        required: true,
+        unique: true,
     },
-    email: {
+    password: {
         type: String,
-        required: true
+        required: true,
     },
-    gender: String,
-    phone: String,
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user',
+    },
 });
 
-const Contact = mongoose.model('contact', contactSchema);
+userSchema.pre('save', function (next) {
+    const user = this;
 
-module.exports = Contact;
+    if (!user.isModified('password')) {
+        return next();
+    }
+
+    bcrypt.genSalt(10, function (err, salt) {
+        if (err) {
+            return next(err);
+        }
+
+        bcrypt.hash(user.password, salt, function (err, hash) {
+            if (err) {
+                return next(err);
+            }
+
+            user.password = hash;
+            next();
+        });
+    });
+});
+
+userSchema.methods.comparePassword = function (candidatePassword, callback) {
+    bcrypt.compare(candidatePassword, this.password, function (err, isMatch) {
+        if (err) {
+            return callback(err);
+        }
+
+        callback(null, isMatch);
+    });
+};
+
+const User = mongoose.model('User', userSchema);
+
+module.exports = User;

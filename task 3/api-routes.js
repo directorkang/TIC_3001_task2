@@ -1,3 +1,4 @@
+//api-routes.js
 // Initialize express router
 let router = require('express').Router();
 const authController = require('./authController');
@@ -29,6 +30,9 @@ router.route('/contacts/:contact_id')
 
 // Define the login route
 router.post('/login', authController.login);
+
+// Define the signup route
+router.post('/signup', authController.signup);
 
 // Export API routes
 module.exports = router;

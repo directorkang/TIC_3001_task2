@@ -1,40 +1,31 @@
-// Import express
-let express = require('express');
-// Import Body parser
-let bodyParser = require('body-parser');
-// Import Mongoose
-let mongoose = require('mongoose');
-// Initialise the app
-let app = express();
+//index.js
+// Import required modules
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const apiRoutes = require('./api-routes');
+const config = require('./config');
 
-// Import routes
-let apiRoutes = require("./api-routes");
+// Create Express app
+const app = express();
 
-// Configure bodyparser to handle post requests
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+// Configure body-parser
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Connect to Mongoose and set connection variable
-mongoose.connect('mongodb://127.0.0.1:27017/resthub', { useNewUrlParser: true, useUnifiedTopology: true });
-var db = mongoose.connection;
-
-// Added check for DB connection
+// Connect to MongoDB
+mongoose.connect(config.database, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', function () {
     console.log("MongoDB connected successfully");
 });
 
-// Setup server port
-var port = process.env.PORT || 8080;
-
-// Send message for default URL
-app.get('/', (req, res) => res.json({ message: 'Rest API is working' }));
-
-// Use Api routes in the App
+// Set up routes
 app.use('/api', apiRoutes);
-// Launch app to listen to specified port
+
+// Start server
+const port = process.env.PORT || 8080;
 app.listen(port, function () {
-    console.log("Running RestHub on port " + port);
+    console.log(`Server running on port ${port}`);
 });
