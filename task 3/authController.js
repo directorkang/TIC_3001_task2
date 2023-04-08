@@ -1,4 +1,3 @@
-// authController.js
 const jwt = require('jsonwebtoken');
 const config = require('./config');
 const User = require('./contactModel');
@@ -48,10 +47,16 @@ exports.signup = async function (req, res) {
     }
 };
 
+exports.authenticate = async function (token) {
+    const decoded = jwt.verify(token, config.secret);
+    const user = await User.findById(decoded.id);
+    return user;
+};
+
 exports.authenticateUser = async (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
-        const user = await authController.authenticate(token);
+        const user = await exports.authenticate(token);
         req.user = user;
 
         // Check if the authenticated user has the necessary permissions
