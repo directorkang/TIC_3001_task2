@@ -1,7 +1,7 @@
 // Initialize express router
 let router = require('express').Router();
 const authController = require('./authController');
-const axios = require('axios');
+//const axios = require('axios');
 
 // Set default API response
 router.get('/', function (req, res) {
@@ -19,22 +19,7 @@ const { authenticateUser } = require('./authController');
 
 // Contact routes
 router.route('/contacts')
-    .get(authenticateUser, function(req, res) {
-        const endpoint = 'http://localhost:8080/api/contacts';
-        const token = req.headers.authorization.split(' ')[1]; // extract the token from the authorization header
-        const headers = {
-            'Authorization': `Bearer ${token}`
-        };
-
-        axios.get(endpoint, { headers })
-            .then(response => {
-                res.json(response.data);
-            })
-            .catch(error => {
-                console.error(error.response.data);
-                res.status(500).json({ error: error.message });
-            });
-    })
+    .get(authenticateUser, contactController.index)
     .post(authenticateUser, contactController.new);
 
 router.route('/contacts/:contact_id')

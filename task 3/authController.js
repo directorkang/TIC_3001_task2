@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('./config');
-const User = require('./contactModel');
+const User = require('./userModel');
 
 exports.login = function (req, res) {
     // Find the user in the database
