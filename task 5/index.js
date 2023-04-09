@@ -1,4 +1,3 @@
-//index.js
 // Import express
 let express = require('express');
 // Import Body parser
