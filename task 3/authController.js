@@ -1,38 +1,46 @@
+//authController.js
 const jwt = require('jsonwebtoken');
 const config = require('./config');
 const User = require('./userModel');
 
 exports.login = function (req, res) {
     // Find the user in the database
-    User.findOne({ username: req.body.username }, function (err, user) {
-        if (err) throw err;
+    User.findOne({ username: req.body.username })
+        .then(user => {
+            // If the user doesn't exist, return an error response
+            if (!user) {
+                res.status(401).json({ success: false, message: 'Authentication failed. User not found.' });
+            }
+            else {
+                // Check if the password is correct
+                user.checkPassword(req.body.password, function (err, isMatch)
+                {
+                    if (err) throw err;
 
-        // If the user doesn't exist, return an error response
-        if (!user) {
-            res.status(401).json({ success: false, message: 'Authentication failed. User not found.' });
-        } else {
-            // Check if the password is correct
-            user.checkPassword(req.body.password, function (err, isMatch) {
-                if (err) throw err;
+                    if (!isMatch)
+                    {
+                        res.status(401).json({ success: false, message: 'Authentication failed. Wrong password.' });
+                    }
+                    else
+                    {
+                        // If the password is correct, create a token with the user ID and username
+                        const token = jwt.sign({ id: user._id, username: user.username }, config.secret, {
+                            expiresIn: '24h'
+                        });
 
-                if (!isMatch) {
-                    res.status(401).json({ success: false, message: 'Authentication failed. Wrong password.' });
-                } else {
-                    // If the password is correct, create a token with the user ID and username
-                    const token = jwt.sign({ id: user._id, username: user.username }, config.secret, {
-                        expiresIn: '24h'
-                    });
-
-                    // Return the token in the response body
-                    res.json({
-                        success: true,
-                        message: 'Enjoy your token!',
-                        token: token
-                    });
-                }
-            });
-        }
-    });
+                        // Return the token in the response body
+                        res.json({
+                            success: true,
+                            message: 'Enjoy your token!',
+                            token: token
+                        });
+                    }
+                });
+            }
+        })
+        .catch(err => {
+            throw err;
+        });
 };
 
 exports.signup = async function (req, res) {
